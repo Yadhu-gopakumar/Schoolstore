@@ -1,0 +1,225 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    body {
+        background: #333;
+        color: #fff;
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    #title {
+        text-align: center;
+        font-weight: 100;
+        margin-top: 50px;
+    }
+
+    #description {
+        font-style: italic;
+        text-align: center;
+        margin-top: -10px;
+        margin-bottom: 35px;
+    }
+
+    #survey-form {
+        margin: 0px auto;
+        min-width: 290px;
+        max-width: 650px;
+        background: #1b1b32;
+        padding: 35px 0 50px 5px;
+        opacity: 0.9;
+        border-radius: 4px;
+    }
+
+    #name,
+    #email,
+    #number,
+    #id_parent,
+    #id_child,
+    #dropdown {
+        border-radius: 3px;
+        border-style: none;
+        height: 30px;
+        width: 97%;
+        padding-left: 7px;
+    }
+
+    select {
+        border-radius: 3px;
+        border-style: none;
+        height: 30px;
+        width: 97%;
+    }
+
+    #comment {
+        width: 97%;
+        height: 100px;
+    }
+
+    #submit {
+        background-color: #37af65;
+        color: #fff;
+        border-radius: 3px;
+        border-style: none;
+        height: 30px;
+        width: 100%;
+    }
+</style>
+
+<body>
+
+    <h1 id="title">Product Order Form</h1>
+    <form id="survey-form" method='post' action='{% url 'orderItem' %}'>
+ {% csrf_token %}
+        <label id="name-label">
+            Name
+            <input name='name' type="text" id="name" placeholder="Enter your name" required />
+        </label><br><br>
+
+        <label id="email-label">
+            Date of Birth
+            <input name='dob' type="date" id="email" required />
+        </label><br><br>
+
+        <label id="number-label">
+            Age
+            <input  name='age'  type="number" id="number" placeholder="Age" min="0" max="100" />
+        </label><br><br>
+
+        <label>Gender</label>
+        <select id="dropdown"  name='gender' >
+            <option value="">-----</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select><br><br>
+
+        <label id="number-label">
+            Phone Number
+            <input  name='Phone' type="number" id="number" placeholder="Mobile" min="0" />
+        </label><br><br>
+
+
+        <label id="name-label">
+            Email
+            <input  name='email'  type="email" id="email" placeholder="Enter your email" required />
+        </label><br><br>
+
+        <label id="name-label">
+            Address
+            <input  name='address' type="text" id="name" placeholder="Address" required />
+        </label><br><br>
+
+        <label>Departement:</label>
+        <select name="parent" id="id_parent" data-child-id='id_child' class='dependent-selects__parent form-control'>
+            <option value="">--------</option>
+            <option value="Science" data-child-options="1|#1|#2">Science</option>
+            <option value="Commerse" data-child-options="4|#3|#4">Commerse</option>
+            <option value="Languages" data-child-options="#1|#5|#6">Languages</option>
+            <option value="Others" data-child-options="#1|#7">Others</option>
+        </select><br><br>
+
+        <label>Courses:</label>
+        <select name="child" id="id_child" class='dependent-selects__child form-control'>
+            <option value="">--------</option>
+            <option value="1">Computer science</option>
+            <option value="2">Physics</option>
+            <option value="3">BBA</option>
+            <option value="4">Bcom</option>
+            <option value="5">Malayalam</option>
+            <option value="6">Hindi</option>
+            <option value="7">Others</option>
+        </select><br><br>
+
+        <label>Purpose</label>
+        <select id="dropdown"  name='purpose' >
+            <option value="nill">-----</option>
+            <option value="Enquiry">Enquiry</option>
+            <option value="Place-order">Place-order</option>
+            <option value="Return">Return</option>
+            <option value="Other">Other</option>
+        </select><br><br>
+
+        <!-- <label>Would you recommend freeCodeCamp to a friend?</label><br>
+        <input type="radio" id="def" name="referral" value="definitely" checked><label for="def">Definitely</label><br>
+        <label><input type="radio" name="referral" value="maybe">Maybe</label><br>
+        <label><input type="radio" name="referral" value="not sure">Not sure</label><br><br> -->
+
+
+        <label>Materials Provided</label><br>
+        <label><input type="checkbox" value="DebitNoteBook"name="checks[]">Debit notebook</label><br>
+        <label><input type="checkbox" value="Pen"name="checks[]">Pen</label><br>
+        <label><input type="checkbox" value="ExamPaper"name="checks[]">Exam Papers</label><br>
+        <label><input type="checkbox" value="Pencil"name="checks[]">Pencil</label><br>
+        <label><input type="checkbox" value="Records"name="checks[]">Records</label><br>
+        <label><input type="checkbox" value="Algorithm_Table"name="checks[]">Algorithm Table</label><br>
+        <label><input type="checkbox" value="Poems"name="checks[]">Poems and Short story books</label><br>
+        <br>
+
+        <button id="submit" type='submit'>Submit</button>
+
+    </form>
+
+
+
+    <script>
+
+
+        var handle_dependent_selects = function ($parent) {
+            var $child = document.getElementById($parent.getAttribute('data-child-id')),
+                $selected = $parent.options[$parent.selectedIndex],
+                parent_val = $selected.value;
+
+            for (var i = 0; i < $child.options.length; i++) {
+                var $option = $child.options[i];
+                if ($option.value != '') {
+                    $option.setAttribute('hidden', true);
+                }
+            };
+
+            if (parent_val) {
+                var child_options = $selected.getAttribute('data-child-options'),
+                    child_options_array = child_options.split('|#');
+
+                for (i = 0; i < $child.options.length; i++) {
+                    var $option = $child.options[i];
+                    if ($option.value == "") {
+                        $option.innerText = "--------";
+                        continue;
+                    }
+                    if (child_options_array.indexOf($option.value) != -1) {
+                        $option.removeAttribute('hidden');
+                    }
+                };
+
+            } else {
+                var show_text = $child.getAttribute('data-text-if-parent-empty');
+                if (!show_text) {
+                    show_text = 'Select ' + $parent.name;
+                }
+                for (i = 0; i < $child.options.length; i++) {
+                    var $option = $child.options[$child.selectedIndex];
+                    if ($option.value == "") {
+                        $option.innerText = '- ' + show_text + ' -';
+                        break;
+                    }
+                };
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var $parents = document.getElementsByClassName('dependent-selects__parent');
+            for (var i = 0; i < $parents.length; i++) {
+                handle_dependent_selects($parents[i]);
+                $parents[i].addEventListener('change', function () {
+                    handle_dependent_selects(this)
+                })
+            }
+        }, false);
+    </script>
+</body>
+
+</html>
